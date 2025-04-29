@@ -1,0 +1,32 @@
+# Node-related
+node_modules
+npm-debug.log
+
+# Python-related
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
+*.log
+
+# OS-specific files
+Thumbs.db
+.DS_Store
+
+# Docker-related files
+.dockerignore
+Dockerfile
+docker-compose.yaml
+
+# Environment files
+.env
+
+# IDE/editor files
+.idea
+.vscode
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace

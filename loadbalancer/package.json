@@ -1,0 +1,15 @@
+{
+  "name": "load_balancer",
+  "version": "1.0.0",
+  "description": "- I want two runtimes running simultaneously.\r - Some of the routes are handled by python others are by node.\r - Some way to share data between them\r - Some way to import function from python to node and vice-versa",
+  "license": "MIT",
+  "author": "baltej",
+  "type": "module",
+  "main": "balancer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

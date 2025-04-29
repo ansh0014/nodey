@@ -1,0 +1,29 @@
+{
+    "routes": [
+      {
+        "path": "/",
+        "method": "get",
+        "target": "node",
+        "description": "Create or update a new resource on the Node.js server"
+      },
+      {
+        "path": "/python",
+        "method": "get",
+        "target": "python",
+        "description": "Create or update a new resource on the Node.js server"
+      },
+      {
+        "path": "/node",
+        "method": "get",
+        "target": "node",
+        "description": "Create or update a new resource on the Node.js server"
+      },
+      {
+        "path": "/baltej",
+        "method": "post",
+        "target": "node",
+        "description": "Create or update a new resource on the Node.js server"
+      }
+      
+    ]
+  }

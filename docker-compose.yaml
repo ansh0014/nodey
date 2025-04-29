@@ -1,0 +1,42 @@
+services:
+  loadbalancer:
+    build:
+      context: ./loadbalancer
+      dockerfile: Dockerfile
+    ports:
+      - "${LOADBALANCER_PORT}:${LOADBALANCER_PORT}"
+    networks:
+      - dockerintranet
+    environment:
+      LOADBALANCER_PORT: ${LOADBALANCER_PORT}
+      NODE_PORT: ${NODE_PORT}
+      PYTHON_PORT: ${PYTHON_PORT}
+      NODE_SERVICE: http://node:${NODE_PORT}
+      PYTHON_SERVICE: http://python:${PYTHON_PORT}
+    volumes:
+      - ./routes.json:/app/routes.json
+    depends_on:
+      - node
+      - python
+
+  node:
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+    networks:
+      - dockerintranet
+    environment:
+      NODE_PORT: ${NODE_PORT}
+
+  python:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    networks:
+      - dockerintranet
+    environment:
+      PYTHON_PORT: ${PYTHON_PORT}
+
+networks:
+  dockerintranet:
+    driver: bridge
