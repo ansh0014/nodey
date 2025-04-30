@@ -44,6 +44,8 @@ export default class Nodey{
             res.send("OK");
         });
 
+        app.get('/health', (_req, res) => res.sendStatus(204));
+
         app.post("/ask", (req, res)=>{
             // console.log(req.body);
             let json = req.body;
@@ -65,16 +67,26 @@ export default class Nodey{
         if (!token){
             throw new Error("Token is required to get data from python.");
         }
-        let response = await fetch("http://python:" + python_port + "/ask", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ asking_about: token })
-        });
-        let jsonResp = await response.json();
-        let data = jsonResp.data;
-        data = Buffer.from(data, 'base64').toString();
-        return data ?? new Error("No data received.");
-        // this function returned the thing which is to be sent to python
+        const retries = 5;
+        const delay = 2000; // milliseconds
+        for (let i = 0; i < retries; i++) {
+            try {
+                // attempt fetch
+                let response = await fetch("http://python:" + python_port + "/ask", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ asking_about: token })
+                });
+                let jsonResp = await response.json();
+                let data = jsonResp.data;
+                return Buffer.from(data, 'base64').toString();
+            } catch (e) {
+                if (i === retries - 1) {
+                    throw new Error(`Nodey ask failed after ${retries} attempts: ${e}`);
+                }
+                await new Promise(res => setTimeout(res, delay));
+            }
+        }
     }
     set(shareObject){
         if(typeof shareObject!="object"){throw new Error("set() received bad arguments")}

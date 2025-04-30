@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import os
 import base64
 import json
+import time
 import requests
 
 app = Flask(__name__)
@@ -17,9 +18,9 @@ class PyNodey:
 
         self.share_object = {}
 
-        @app.route("/", methods=["GET"])
-        def health_check():
-            return "OK", 200
+        @app.route('/health', methods=['GET'])
+        def health():
+            return '', 204
 
         @app.route("/", methods=["POST"])
         def base_response():
@@ -47,19 +48,26 @@ class PyNodey:
         if not token:
             raise Exception("Token is required to get data from Node.")
 
-        try:
-            response = requests.post(
-                f"{node_host}/ask",
-                json={"asking_about": token},
-                timeout=5
-            )
-            response.raise_for_status()
-            response_json = response.json()
-            encoded_data = response_json.get("data")
-            decoded = base64.b64decode(encoded_data).decode()
-            return json.loads(decoded)
-        except Exception as e:
-            raise Exception(f"Failed to ask node: {e}")
+        retries = 5
+        delay = 2  # seconds
+        last_exc = None
+        for i in range(retries):
+            try:
+                response = requests.post(
+                    f"{node_host}/ask",
+                    json={"asking_about": token},
+                    timeout=5
+                )
+                response.raise_for_status()
+                response_json = response.json()
+                encoded_data = response_json.get("data")
+                decoded = base64.b64decode(encoded_data).decode()
+                return json.loads(decoded)
+            except Exception as e:
+                last_exc = e
+                if i < retries - 1:
+                    time.sleep(delay)
+        raise Exception(f"PyNodey ask failed after {retries} retries: {last_exc}")
 
     def start(self):
         print(f"PyNodey listening on port {self.port}")

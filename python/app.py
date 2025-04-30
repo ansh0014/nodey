@@ -11,6 +11,10 @@ app = Flask(__name__)
 def home():
     return '<h1>hoelaSSaa from python</h1>'
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return '', 204
+
 pynodey = PyNodey()
 
 pynodey.set({
