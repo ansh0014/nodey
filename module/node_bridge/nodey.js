@@ -49,8 +49,9 @@ export default class Nodey{
             let json = req.body;
             let token  = json.asking_about;
             // {"asking_about":"token"}
+            let toSend;
             try{
-            let toSend = this.shareObject[token]();
+            toSend = this.shareObject[token]();
             }
             catch(e){
                 console.log(e);
