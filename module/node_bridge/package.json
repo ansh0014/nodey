@@ -1,0 +1,11 @@
+{
+  "name": "nodey",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

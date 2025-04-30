@@ -27,6 +27,11 @@ services:
       - dockerintranet
     environment:
       NODE_PORT: ${NODE_PORT}
+      PYTHON_PORT: ${PYTHON_PORT}
+      NODE_NODEY_PORT: ${NODE_NODEY_PORT}
+      PYTHON_NODEY_PORT: ${PYTHON_NODEY_PORT}
+    volumes:
+      - ./module:/app/module
 
   python:
     build:
@@ -35,8 +40,12 @@ services:
     networks:
       - dockerintranet
     environment:
+      NODE_PORT: ${NODE_PORT}
       PYTHON_PORT: ${PYTHON_PORT}
-
+      NODE_NODEY_PORT: ${NODE_NODEY_PORT}
+      PYTHON_NODEY_PORT: ${PYTHON_NODEY_PORT}
+    volumes:
+      - ./module:/app/module
 networks:
   dockerintranet:
     driver: bridge

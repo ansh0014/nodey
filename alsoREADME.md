@@ -29,3 +29,12 @@ customerName = node.ask("Customer_names_in_db") # returns object with customer n
 - The easiest way to write load balancer is to pick a language, for example JS, write it in express and reroute the requests to the node and python.
 - I am more okay with JS so i will write it in JS
 - Am Done with load balancer, I stated this project yesterday.
+
+## User should be able to 
+```bash
+npm i -g nody
+
+nody init
+// OR
+git clone https://github.com/baltej223/template
+```

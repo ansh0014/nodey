@@ -62,9 +62,19 @@ function handleRoutes(routes) {
 
         app[method](route.path, async (req, res) => {
             try {
-                let response = await fetch(`${targetUrl}${req.url}`);
+                let response = await fetch(`${targetUrl}${req.url}`, {
+                    method: method.toUpperCase(),
+                    headers: {
+                        'Content-Type': req.headers['content-type'] || 'application/json',
+                        // Optionally forward more headers if needed
+                    },
+                    body: ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase())
+                        ? JSON.stringify(req.body)
+                        : undefined
+                });
+        
                 let data = await response.text();
-                
+        
                 res.status(response.status);
                 res.set('Content-Type', response.headers.get('content-type') || 'text/plain');
                 res.send(data);
@@ -73,6 +83,7 @@ function handleRoutes(routes) {
                 res.status(502).send('Bad Gateway');
             }
         });
+        
     });
 }
 

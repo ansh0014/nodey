@@ -1,5 +1,5 @@
 import express from 'express';
-
+import Nodey from './module/node_bridge/nodey.js';
 export const app = express();
 
 // here is all the bread and the butter that comes in
@@ -31,3 +31,16 @@ console.log(`Node server starting on port ${PORT}`);
 app.listen(PORT, () => {
     console.log(`Node Server running on port ${PORT}`);
 });
+
+
+let nodey_node_server = new Nodey();
+
+nodey_node_server.set({
+    Customers_in_db:()=>{
+        return "this si the data which is to be sent";
+    }
+});
+
+setTimeout(async ()=>{console.log(await nodey_node_server.ask("Customers_in_db"));}, 2000);
+
+nodey_node_server.start();

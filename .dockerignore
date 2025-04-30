@@ -30,3 +30,5 @@ docker-compose.yaml
 *.swo
 *.sublime-project
 *.sublime-workspace
+
+package-lock.json
