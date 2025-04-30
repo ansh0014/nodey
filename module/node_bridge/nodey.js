@@ -49,8 +49,13 @@ export default class Nodey{
             let json = req.body;
             let token  = json.asking_about;
             // {"asking_about":"token"}
-
+            try{
             let toSend = this.shareObject[token]();
+            }
+            catch(e){
+                console.log(e);
+                res.send(e);
+            }
             let object_to_send = { data: Buffer.from(JSON.stringify(toSend)).toString('base64') };
             res.json(object_to_send);
         });
