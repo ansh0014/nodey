@@ -33,7 +33,7 @@ This stack is ideal for projects that:
 
 ### 2. Load Balancer
 - Reads `routes.json` at startup to determine where to send incoming requests (e.g., `/node` → Node backend).
-- It doesn’t expose any port until all required services are up.
+- It doesn't expose any port until all required services are
 - Automatically retries requests if a service is temporarily unreachable (e.g., network hiccups, slow boot).
 
 ### 3. Client Request Routing
@@ -73,6 +73,7 @@ dual_backend/
 ├── python/                     # Python backend [Any Framework]
 │   ├── app.py
 │   ├── Dockerfile
+│   ├── nodey.py
 │   └── requirements.txt
 │
 ├── module/
@@ -140,10 +141,9 @@ Make sure you have Docker and Docker Compose installed.
 ## Creating an Application using this template
 Here is a comprehensive explanation of how to create an application using this template. 
 
-## 1. Routing
-Since its already mentioned that the request which is sent by the user is first handled by loadbalancer, So a kind of *routing table* must be given to load balancer for initialisation of the proxy routes.
+Since it's already mentioned that the request which is sent by the user is first handled by the loadbalancer, a kind of *routing table* must be given to the load balancer for initialization of the proxy routes.
 
-Its done witht the help of  ```routes.json``` file, which is at the root of the project.
+This is done with the help of the ```routes.json``` file, which is at the root of the project.
 
 ### -> Example ```routes.json```
 
@@ -172,18 +172,18 @@ Its done witht the help of  ```routes.json``` file, which is at the root of the 
   }
 ```
 ### Explanation of it
-- This file have a key named "routes" whose value is an array which cointaines object which defines the routes.
+- This file has a key named "routes" whose value is an array which contains objects that define the routes.
 
-- Each of the object containes keys like, "path", "method", "target", "description"(optional).
+- Each object contains keys like "path", "method", "target", and "description" (optional).
 
-- Path refers to the url at which the loadbalancer will listen and redirect the request to. Means if the above json file is used then if a request will be received at /node by the load balancer and will send the request to /node of the node cointainer, which means that /node should aready be initialised on node cointainer, and same goes for python.
+- Path refers to the URL at which the loadbalancer will listen and redirect the request. For example, if the above JSON file is used, when a request is received at /node by the load balancer, it will forward the request to the /node endpoint of the node container. This means that the /node route should already be initialized on the node container, and the same applies for Python.
 
-- Method being the http method, target being the final destination of the request and description is for increasing human readibility, **and its ignored by the load balancer.**
+- Method refers to the HTTP method, target is the final destination of the request (either "node" or "python"), and description is for improving human readability, **and is ignored by the load balancer.**
 
 ---
- The load balancer will initialize its proxy routes according to this JSON file, **without checking if the routes are available on the node and python runtime.** So for minimizing errors, routes in routes.json must be added once the routes are properly handled on individual runtime.
- 
- ## 2. Environment Variables
+The load balancer will initialize its proxy routes according to this JSON file, **without checking if the routes are available on the node and python runtimes.** To minimize errors, routes in routes.json should be added only after the routes are properly handled on individual runtimes.
+
+## 2. Environment Variables
 In the root of the project there is an ```.env```
 ### Example ```.env```
 
