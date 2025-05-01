@@ -306,3 +306,5 @@ threading.Thread(target=pynodey.start, daemon=True).start() # Its super importan
 
 ## Future Plans
 - It can be converted to an something like IDE and user will not have to deal with docker on its own
+---
+Managed by ```Baltej Singh```, ```@baltej223```.
