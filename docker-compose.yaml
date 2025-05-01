@@ -32,6 +32,11 @@ services:
       PYTHON_NODEY_PORT: ${PYTHON_NODEY_PORT}
     volumes:
       - ./module:/app/module
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:${NODE_PORT}/health"]
+    #   interval: 5s
+    #   retries: 5
+    #   start_period: 5s
 
   python:
     build:
@@ -44,8 +49,14 @@ services:
       PYTHON_PORT: ${PYTHON_PORT}
       NODE_NODEY_PORT: ${NODE_NODEY_PORT}
       PYTHON_NODEY_PORT: ${PYTHON_NODEY_PORT}
-    volumes:
-      - ./module:/app/module
+    # volumes:
+    #   - ./module:/app/module
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:${PYTHON_PORT}/health"]
+    #   interval: 5s
+    #   retries: 5
+    #   start_period: 5s
+
 networks:
   dockerintranet:
     driver: bridge

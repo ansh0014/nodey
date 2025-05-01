@@ -61,27 +61,61 @@ function handleRoutes(routes) {
         }
 
         app[method](route.path, async (req, res) => {
-            try {
-                let response = await fetch(`${targetUrl}${req.url}`, {
-                    method: method.toUpperCase(),
-                    headers: {
-                        'Content-Type': req.headers['content-type'] || 'application/json',
-                        // Optionally forward more headers if needed
-                    },
-                    body: ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase())
-                        ? JSON.stringify(req.body)
-                        : undefined
-                });
-        
-                let data = await response.text();
-        
-                res.status(response.status);
-                res.set('Content-Type', response.headers.get('content-type') || 'text/plain');
-                res.send(data);
-            } catch (e) {
-                console.error('Error fetching:', e);
-                res.status(502).send('Bad Gateway');
+            const retries = 5;
+            const delay = 2000; // milliseconds
+            let lastError;
+
+            for (let i = 0; i < retries; i++) {
+                try {
+                    let response = await fetch(`${targetUrl}${req.url}`, {
+                        method: method.toUpperCase(),
+                        headers: {
+                            'Content-Type': req.headers['content-type'] || 'application/json',
+                        },
+                        body: ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase())
+                            ? JSON.stringify(req.body)
+                            : undefined
+                    });
+
+                    let data = await response.text();
+
+                    res.status(response.status);
+                    res.set('Content-Type', response.headers.get('content-type') || 'text/plain');
+                    res.send(data);
+                    return;
+                } catch (e) {
+                    lastError = e;
+                    console.error(`Error fetching (attempt ${i + 1}):`, e);
+                    if (i < retries - 1) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
             }
+
+            res.status(502).send('Bad Gateway: ' + lastError);
+        });
+
+        // support trailing slash on this route
+        app[method](route.path + '/', async (req, res) => {
+            let lastError;
+            const retries = 5;
+            const delay = 2000;
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(`${targetUrl}${req.url}`, {
+                        method: method.toUpperCase(),
+                        headers: { 'Content-Type': req.headers['content-type'] || 'application/json' },
+                        body: ['POST','PUT','PATCH'].includes(method.toUpperCase()) ? JSON.stringify(req.body) : undefined
+                    });
+                    const data = await response.text();
+                    res.status(response.status).set('Content-Type', response.headers.get('content-type') || 'text/plain').send(data);
+                    return;
+                } catch (e) {
+                    lastError = e;
+                    if (i < retries - 1) await new Promise(r => setTimeout(r, delay));
+                }
+            }
+            res.status(502).send('Bad Gateway: ' + lastError);
         });
         
     });

@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Then copy rest of the files
 COPY . .
+# COPY ../module/python_bridge/nodey.py .
 
 # Expose port (optional, helps documentation inside docker)
 EXPOSE ${PYTHON_PORT}
