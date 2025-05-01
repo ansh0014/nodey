@@ -2,7 +2,7 @@
 
 ### "Basically writing backend in JavaScript and Python simultaneously!"
 
-**Nodey** is a microservice architecture template that runs **Node.js** and **Python** backend services in parallel, connected through bridge modules and surfaced via a central **Express.js-based load balancer**. Each backend can call into the other using a token-based API bridge.
+**Nodey** (nooh-dee) is a microservice architecture template that runs **Node.js** and **Python** backend services in parallel, connected through bridge modules and surfaced via a central **Express.js-based load balancer**. Each backend can call into the other using a token-based API bridge.
 
 This stack is ideal for projects that:
 - Use different runtimes for different strengths (e.g., Python for ML, Node.js for real-time tasks),
